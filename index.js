@@ -1,5 +1,6 @@
 const express = require("express");
 const asyncHandler = require("express-async-handler");
+const { OAuth2Client } = require("google-auth-library");
 
 // Create and configure the app
 const app = express();
@@ -12,13 +13,15 @@ app.use(express.json());
 app.post(
   "/",
   asyncHandler(async (req, res) => {
+    const event = req.body;
+    const user = await userInfo(event);
     const card = {
       sections: [
         {
           widgets: [
             {
               textParagraph: {
-                text: `Hello world from my server!`,
+                text: `Hello ${user.email} ${user.sub}`,
               },
             },
           ],
@@ -37,6 +40,15 @@ app.post(
     res.json(renderAction);
   })
 );
+
+async function userInfo(event) {
+  const idToken = event.authorizationEventObject.userIdToken;
+  const authClient = new OAuth2Client();
+  const ticket = await authClient.verifyIdToken({
+    idToken,
+  });
+  return ticket.getPayload();
+}
 
 // Start the server
 const port = process.env.PORT || 30000;

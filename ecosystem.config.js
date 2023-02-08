@@ -1,8 +1,8 @@
 const deployConfig = {
   user: "root",
   path: "/var/www/gg-addon",
-  repo: "git@github.com:AvengersCodeLovers/aPoll.git",
-  "post-deploy": "cd slack-app && npm install && npm run start",
+  repo: "git@github.com:zingfeng/google-addon-demo.git",
+  "post-deploy": "npm install && node index.js",
 };
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
     daybreak: {
       ...deployConfig,
       host: "134.209.110.123",
-      ref: "origin/main",
+      ref: "origin/master",
     },
   },
 };
